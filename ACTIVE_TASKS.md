@@ -1,38 +1,33 @@
-# Active Tasks
-*Updated: May 9, 2026 23:59 ET*
+# Active Tasks Update — May 10, 2026 01:40 ET
+
+## ✅ DONE OVERNIGHT (May 9-10)
+
+### ThunderCommo Web UI — 56 bugs fixed
+- Security: hardcoded token removed
+- Connection: dedup on reconnect, visibility/sleep handling, disconnect flood throttle
+- Rendering: stream dedup, markdown finalize, auto-scroll
+- Mobile: iPhone sidebar drawer, safe areas, iOS Safari zoom fix
+- Performance: DOM cap, memory leaks fixed
+
+### iOS Build 20 — 5 CLI Jon sessions complete
+Branch: ThrustNThunder/thunderagent-ios → build-20-redesign (commit 3daffca)
+
+Session 1: Auth unification — single Keychain service, signOut wired, refresh expiry
+Session 2: APNs retry after onboarding, token out of UserDefaults, real expiry
+Session 3: Actor isolation, ping heartbeat, NWPathMonitor, bounded inbound, outbox guards  
+Session 4: Wire protocol parity — streaming, thinking dots, roster, federation status
+Session 5: Security cleanup, APNs primer screen, dead code removed, integration notes
 
 ## 🔴 WAITING ON MACK
 
 ### Build 20 — Ship to TestFlight
-- Branch: `ThrustNThunder/thunderagent-ios` → `build-20-redesign` (commit 7d3aae3)
-- All server endpoints live at thunderai.us
-- Mack integrates when Michael gets to room
-- Alex's token: `alex-thundercommo-4a365924ea69066effbb9ed88fead6c7`
+- Branch ready: build-20-redesign (commit 3daffca)
+- INTEGRATION_NOTES_V2.md has Mack's 10-step checklist + device testing checklist
+- Alex's token: alex-thundercommo-4a365924ea69066effbb9ed88fead6c7
+- Gateway: wss://thunderai.us
 
-## 🟡 NEXT UP
+## 🟡 NEXT
 
 ### ThunderGate Phase 3
 - ThunderCommo native channel integration
-- Ghost Jon harness (shadow testing)
-- Location: `/home/ubuntu/thundergate-dev/`
-- Repo: `ThrustNThunder/thundergate-dev`
-
-### API Agent Identity Endpoint
-- `/api/agent/identity` returns static data right now
-- Should read from actual agent config
-- File: `/home/ubuntu/thundergate/extensions/thundercomm/inbox.mjs`
-
-### APNs Sender
-- Relay stores device tokens but never sends pushes
-- Need to fire `content-available: 1` when message stored in inbox
-- Same file: `inbox.mjs`
-
-## ✅ DONE TODAY (May 9)
-
-- ThunderGate Phase 1 + 2 complete (1,700+ lines TypeScript)
-- CLI Jon authenticated on Max subscription
-- Build 20 redesign: 23 Swift files, correct iOS delivery architecture
-- All 8 server endpoints live
-- User auth system: signup, signin, Face ID, BYOAA
-- Multi-device onboarding
-- AA scripts pushed to ThrustNThunder/aa-pilot-shared
+- Ghost Jon harness
