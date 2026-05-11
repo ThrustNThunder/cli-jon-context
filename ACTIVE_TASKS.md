@@ -1,50 +1,62 @@
-# Active Tasks — May 10, 2026 02:47 ET
+# Active Tasks — May 10, 2026 23:05 ET
 
-## 🔴 ACTIVE NOW
+## 🟡 ACTIVE / NEXT
 
-### Build 21 — Device Crash (BLOCKING)
-- Simulator: works ✅ (shows login screen)
-- Device (Michael's phone): crashes immediately
-- Suspect: Keychain access group mismatch on real device
-- Mack investigating crash log
-- Fix needed before Alex can test
+### Ghost Jon 7-Day Clock
+- Day 1 = May 10 (FK fix deployed tonight). Need 7 consecutive clean days before cutover.
+- Today's err_rate still red (44.7%) — FK errors logged earlier today *before* the fix.
+- Latest 3 log entries (after fix) are clean Haiku responses, no FK errors.
+- Monitor daily with `ghost status`. Promote when 7 consecutive clean days reached.
 
-## 🟡 READY WHEN DEVICE FIXED
+### ThunderCommo Build 25 → 26
+- Build 25 (Settings UX fixes) uploaded — grandfathered, last build without pressure-test gate.
+- From Build 26 onward: Jon runs CLI Jon pressure test before Mack ships. Always.
+- Pressure test gate is locked workflow (per #tnt May 10 13:46 ET).
 
-### Alex Onboarding
-- TestFlight: Build 21 VALID ✅
-- Alex token: alex-thundercommo-4a365924ea69066effbb9ed88fead6c7
-- Gateway: wss://thunderai.us
-- Burt token: needs generating (placeholder in bridge)
+### thundercomm-stable Web UI Redesign
+- Commit fb62e6634a sits on Mac side. Mack handles the push.
 
-### Michael's Admin Account
-- Token: 4ca1100a180ad68a94b004056e56fd39c81bdccb742d2926
-- Pre-seeded in app on first launch
+## ✅ DONE TONIGHT (May 10)
 
-## ✅ DONE TONIGHT
+### ThunderGate Hardening (commits 1a483c7, b167d6b)
+- DB foreign-key constraint fix — ghost entries no longer crash on DB write.
+- `ghost status` display fixed — shows sessions_dir + file count.
+- systemd unit installed (`/etc/systemd/system/thundergate.service`).
+- Ghost pairing timing fixed — polls up to 30s for Haiku response before logging "not yet ready".
+- Channel conflict logging improved — explains why port 8765 is skipped.
+- dist/ recompiled and pushed so the runtime actually has the fixes.
 
-### Web UI (thundercomm-stable, 60+ bug fixes)
-- Auto-scroll fixed (force on incoming messages)
-- Stale model label fixed (hidden until active)
-- Ping/pong handled (no more "unknown ping" errors)
-- 56 original bugs from CLI Jon audit
+### Build 27 Reports Pushed (commit 0d19a51)
+- Gate + pressure-test reports + briefs landed on master.
 
-### iOS Build 21 (thunderagent-ios/build-20-redesign → ThunderCommIOS Build 21)
-Session 1: Auth unification
-Session 2: APNs retry, token security
-Session 3: Actor isolation, heartbeat, reconnect
-Session 4: Wire protocol parity (streaming, thinking, roster)
-Session 5: Security, primer screens, integration notes
+### thundermind_price_watch.py Fixed
+- Replaced Pangoly-fed snippet data with direct Newegg HTML scraping.
+- Added trusted-domain whitelist (Newegg, Amazon, Micro Center, B&H, manufacturer stores).
+- Added aggregator blacklist (Pangoly, Technobezz, camelcamelcamel, keepa, ebay, reddit, …).
+- Median-of-3 decision price (less sensitive to single outliers).
+- Falls back to current_est when no live data instead of NO_DATA.
+- Test run on May 10 23:03 ET matches morning verification:
+  GPU $9,349.99 · Mobo $1,290.99 · CPU $1,199.99 (BUY) · Phanteks $179.99 (BUY).
 
-### Server Endpoints (all live at thunderai.us)
-/api/auth/signup, signin, me, refresh ✅
-/api/inbox, /api/inbox/ack ✅
-/api/messages, /api/devices/token ✅
-/api/agent/identity ✅
+### Earlier Today
+- MEMORY.md trimmed.
+- GitHub PAT rotated.
+- YouTube API token refreshed.
+- ThunderCommo ack-on-receipt fix (Mack shipped).
+- Admin dashboard updated.
 
-## 🟡 NEXT (after device crash fixed)
+## 🔵 STILL TO DO
 
-### ThunderGate Phase 3
-- ThunderCommo native channel
-- Ghost Jon harness
-- Surface layer heartbeat (10min progress posts)
+### Brave API Key Missing on ThunderBase
+- `~/.openclaw/openclaw.json → tools.web.search.apiKey` is empty.
+- Without it the price-watch Amazon/Micro Center fallback returns nothing.
+- Newegg direct scrape covers the primary parts, but key should be restored.
+
+### Enable thundergate systemd Service
+- Unit file exists but `systemctl status thundergate` shows inactive (dead).
+- `sudo systemctl enable thundergate && sudo systemctl start thundergate` when ready.
+
+## Important Rules
+- Never push to thundercomm-stable from ThunderBase — that's Mack's repo on Mac.
+- No unsolicited changes to openclaw.json or gateway config.
+- Pressure-test gate is non-negotiable for Build 26+.
