@@ -1,11 +1,16 @@
-# Active Tasks — May 10, 2026 23:05 ET
+# Active Tasks — May 11, 2026 00:10 ET
 
 ## 🟡 ACTIVE / NEXT
 
 ### Ghost Jon 7-Day Clock
-- Day 1 = May 10 (FK fix deployed tonight). Need 7 consecutive clean days before cutover.
-- Today's err_rate still red (44.7%) — FK errors logged earlier today *before* the fix.
-- Latest 3 log entries (after fix) are clean Haiku responses, no FK errors.
+- Day 1 = May 10 (FK fix deployed). Need 7 consecutive clean days before cutover.
+- May 10 still red (44.7% err) — FK errors logged earlier that day *before* the fix.
+- **May 11 pressure test passed clean** (see Done Tonight). FK fix is holding;
+  test ran 54 paired entries with **0 FK errors, 0 transport errors, median
+  latency 705ms**.
+- Open issue: today's `match_rate` after cleanup is **0% on 6 organic samples**.
+  Not a FK regression — it's the Haiku ↔ OpenClaw voice gap. Needs real-traffic
+  characterization, not a code fix.
 - Monitor daily with `ghost status`. Promote when 7 consecutive clean days reached.
 - Automated check wired into `~/.openclaw/workspace/scripts/daily-health-check.sh` (cron 08:00 UTC) — flags err > 10%, missing score rows, and any FK regressions newer than the deploy.
 
@@ -17,7 +22,22 @@
 ### thundercomm-stable Web UI Redesign
 - Commit fb62e6634a sits on Mac side. Mack handles the push.
 
-## ✅ DONE TONIGHT (May 10)
+## ✅ DONE TONIGHT (May 10 → May 11)
+
+### Ghost Jon Pressure Test (commit 5a5d2bf, May 11 00:08 ET)
+- 50-message flood + edge cases + mid-run session-boundary test.
+- **Verdict: PASSED.** 54/55 entries logged (the 1 "missing" was an
+  empty-string user message correctly filtered upstream by `parseLine`).
+- FK fix is holding — 0 new `FOREIGN KEY constraint failed` errors
+  during or since the test.
+- Latency: min 519 / median 705 / p90 4890 / max 5908 ms.
+- Edge cases (5000-char, multi-script unicode, JSON+`<script>` payload,
+  literal `"null"`) all logged correctly.
+- Mid-run boundary file picked up on first 30s rescan, 5/5 pairs paired.
+- Bug-fix bundled: pressure-test sessions (`ghost-test-*`) would
+  otherwise pollute daily scoring with synthetic 0% match rows. Added
+  scan-time and evaluator-time skip filters.
+- Full report: `GHOST_PRESSURE_RESULTS.md` in thundergate-dev.
 
 ### ThunderGate Hardening (commits 1a483c7, b167d6b)
 - DB foreign-key constraint fix — ghost entries no longer crash on DB write.
