@@ -48,21 +48,26 @@ BYOAA is the authorization spine for all of this. If an AI agent is going to man
 
 **Kya BYOAA** = the biometric approval mechanism. Michael physically approves each action scope.
 
-### The Apple Strategy
-Build ThunderAgent to full intended capability first — don't let Apple's current restrictions constrain the architecture. Design what it *should* be, prove it works, then present the case to Apple.
+### The Platform Strategy — Android First
 
-**Three possible outcomes:**
+**Android is the full vision.** Deep OS access, SMS-as-user, outbound calls, settings control — all available via standard Android APIs. No sandbox games, no jailbreak, no permission-begging. Build ThunderAgent to full capability on Android first.
+
+**iOS runs in parallel** — build what Apple allows today: App Intents, CallKit VoIP, server-side execution, BYOAA for high-stakes actions. Smaller caps but real product, App Store legit. iOS is not abandoned — it's capped at what the platform permits.
+
+**The play:**
+1. Android — full ThunderAgent capability + BYOAA fully integrated. This is the demo machine and the user base.
+2. iOS — best-available version within Apple's sandbox. Real product, App Store legitimate.
+3. Grow user base on both platforms simultaneously.
+4. Walk into Apple with a working Android product, active users, and proof: "this is what your users want, here's the traction."
+
+That's genuine leverage. A working Android product with real users is a completely different conversation than a pitch deck.
+
+**Three possible outcomes with Apple:**
 1. **Apple buys it** — they've done this before (bought Workflow → became Shortcuts). ThunderAgent is infrastructure, not a feature.
 2. **Apple partners** — special entitlements, App Store blessing, ThunderAgent becomes the reference implementation for iOS agent authorization
-3. **Apple says no** — MDM/Enterprise route, build user base, leverage shifts as traction grows
+3. **Apple says no** — Android user base keeps growing, leverage shifts further in ThunderAI's favor
 
-None of those are bad outcomes. Build from strength.
-
-**Distribution path until Apple engagement:**
-- Siri Shortcuts + CallKit + MessageUI — limited but App Store legit
-- MDM/Enterprise distribution — deeper access, Michael's own device, not for general public
-- Apple Intelligence APIs (iOS 18/19) — Apple opening agent-level access, timing may work in our favor
-- Special entitlement negotiations — ThunderAI makes the case directly to Apple eventually
+None of those are bad outcomes. Build from strength. No jailbreaking. No MDM games. Go as far as possible on our own.
 
 ### Long-Term: Full Action Authorization
 Every significant agent action requires a BYOAA approval gate:
