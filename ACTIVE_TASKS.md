@@ -7,6 +7,7 @@
 - Today's err_rate still red (44.7%) — FK errors logged earlier today *before* the fix.
 - Latest 3 log entries (after fix) are clean Haiku responses, no FK errors.
 - Monitor daily with `ghost status`. Promote when 7 consecutive clean days reached.
+- Automated check wired into `~/.openclaw/workspace/scripts/daily-health-check.sh` (cron 08:00 UTC) — flags err > 10%, missing score rows, and any FK regressions newer than the deploy.
 
 ### ThunderCommo Build 25 → 26
 - Build 25 (Settings UX fixes) uploaded — grandfathered, last build without pressure-test gate.
@@ -34,7 +35,8 @@
 - Added trusted-domain whitelist (Newegg, Amazon, Micro Center, B&H, manufacturer stores).
 - Added aggregator blacklist (Pangoly, Technobezz, camelcamelcamel, keepa, ebay, reddit, …).
 - Median-of-3 decision price (less sensitive to single outliers).
-- Falls back to current_est when no live data instead of NO_DATA.
+- Falls back to current_est when no live data instead of NO_DATA (tagged `_(est)_` in Slack output so estimate-only rows are distinguishable from live prices).
+- Loud warning surfaces in cron logs when Brave API key is missing (was silently returning NO_DATA).
 - Test run on May 10 23:03 ET matches morning verification:
   GPU $9,349.99 · Mobo $1,290.99 · CPU $1,199.99 (BUY) · Phanteks $179.99 (BUY).
 
