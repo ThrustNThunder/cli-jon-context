@@ -207,6 +207,7 @@ Call / SMS from YOUR number
 | 5 | KYA/BYOAA for all authorization |
 | 6 | Jon owns web/backend/relay. Mack owns iOS. Hard boundary. |
 | 7 | Final gate: Jon's CLI Jon pass before any push |
+| 8 | Agent onboarding: relay-based auto-discovery (Option A) or short pairing code (Option B, Build 54). No QR codes, no long token entry. Session IP + token embedded in pairing flow. |
 
 ---
 
