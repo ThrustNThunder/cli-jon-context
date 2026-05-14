@@ -1,6 +1,64 @@
-# Active Tasks — May 13, 2026
+# Active Tasks — May 14, 2026
 
-## 🟢 LOCKED IN TODAY (May 13, 2026)
+## 🟢 LOCKED IN TODAY (May 14, 2026)
+
+### ThunderBrowser Phase 0 + Phase 1 scaffold landed in `thundergate-dev`
+- Branch `thunderbrowser-phase01` carries a self-contained Phase 0+1
+  scaffold under `thunderbrowser/` (kept off `thundercomm-stable` per
+  the no-push-from-ThunderBase rule).
+- **TB-0 Phase 0 plumbing**: MV3 manifest, background SW with
+  alarm-driven heartbeat, WSS client with exponential-backoff reconnect
+  + outbox replay, popup + options pages, dev-Chrome launcher script,
+  IDB-backed audit store with chained SHA-256 prev_hash, fixture HTTP
+  server on :7860, mock TG WSS server on :7861 with `.tbscript` runner,
+  bridge module on :7862 with per-session command queue +
+  ack/result tracking.
+- **TB-1-1 content script bus + isolated-world injection** ✅ —
+  declarative + programmatic injection, envelope-shaped CS↔SW bus,
+  re-inject on stale ping, ref registry with WeakRef + lineage
+  invalidation.
+- **TB-1-2/1-3 snapshot_dom (structured) + query/get_text/get_url** ✅
+  — interactive + landmark + text-bearing node retention, attr
+  whitelist, accessible-name computation, 80 KB budget with truncation,
+  ref handles, redactor-aware values.
+- **TB-1-4 navigate + wait_for_load** ✅ — allowlist enforced, network-
+  idle and DOMContentLoaded modes deferred to CS.
+- **TB-1-5/1-6/1-7 click + fill + scroll_to** ✅ — visibility/clickable
+  preconditions, scroll-into-view, native value-setter shim for
+  React/Vue controlled inputs, precision-click stability re-check at
+  250 ms.
+- **TB-1-8..1-11 detect_modal / detect_error / detect_loading /
+  is_logged_in** ✅ — heuristic modal classifier (cookie/auth/
+  marketing/error/confirmation), error patterns (login_expired,
+  http_5xx, access_denied), DOM-anchor login signal.
+- **TB-1-13 allowlist** ✅ — hardcoded to `localhost:7860` +
+  `*.aa.com`. Bridge has no command to expand it; this is the
+  architectural lever against a compromised TG.
+- **TB-1-14 input redactor** ✅ — runs before any CS→SW message;
+  password / cc / ssn fields blanked, length preserved as `value_len`.
+- **TB-1-15 state-pack format + AA pack** ✅ — versioned JSON ruleset
+  with URL/DOM/text detectors and confidence weights; AA pack covers
+  the 9 fixture states plus `password_change`, `timeout`,
+  `captcha_blocked`. MutationObserver emits `state_detected` on
+  coalesced changes (250 ms debounce). All 9 states resolve correctly
+  in the offline state-pack test.
+- **Fixture site** ✅ — `fixtures/aa/{login,dashboard,travel-planner,
+  travel-planner_results,…_fare,…_passenger,…_payment,…_confirm,
+  …_confirmed,timeout,password-expired,captcha}.html` served on
+  `:7860`.
+- **Tests green** (`npm test` in `thunderbrowser/`):
+  - `tests/smoke.mjs` — envelope helper + state-pack shape + manifest
+    references + bridge module imports.
+  - `tests/state-pack.test.mjs` — 9 AA states resolved by URL+DOM+text
+    detectors against synthetic fixtures.
+  - `tests/bridge.e2e.mjs` — ws hello/ready handshake + command
+    round-trip against the production-shaped bridge module.
+- **Not wired (Phase 2+):** BYOAA scope tokens, device Ed25519 key +
+  pairing flow, recording mode (`.tbrec`), gateway-side audit anchor
+  in `context.db`, PBS state pack + fixtures, hot-pushed state packs,
+  ThunderCommo confirmation gate.
+
+## 🟢 LOCKED IN — May 13, 2026
 
 ### Prime Directive + Two-Mode Architecture
 - **`docs/PROJECT_JON_PRIME_DIRECTIVE.md`** authored and locked in
@@ -170,19 +228,18 @@
   (dead). `sudo systemctl enable thundergate && sudo systemctl start
   thundergate` when ready.
 
-### ThunderBrowser Phase 1 — remaining tickets
-- TB-1-4 navigate + load-wait — implemented, smoke-test close pending.
-- TB-1-5 click with visibility + stability check — implemented, smoke-
-  test close pending.
-- TB-1-6 fill with native value setter — implemented, smoke-test close
-  pending.
-- TB-1-7 scroll-to — implemented, smoke-test close pending.
-- TB-1-8..TB-1-11 modal / error / loading / login detectors.
-- TB-1-12 local audit chain with sha-256 linking + device signatures.
-- TB-1-13 two-layer domain allowlist (manifest + SW immutability) —
-  replaces the Phase 1 `<all_urls>` posture before any production cut.
-- TB-1-14 input redactor in content script (pre-transmission).
-- TB-1-15..TB-1-18 state packs (AA + PBS), fixtures, recording mode.
+### ThunderBrowser — Phase 1 remainders (post-May-14 scaffold)
+- TB-0-7/0-8 device Ed25519 keypair + QR pairing flow + pinned-kid map.
+- TB-1-12 audit chain: device signatures (placeholder today), gateway
+  anchor table in `context.db`, server-ack-driven local rotation.
+- TB-1-16 AA `.tbscript` happy-path + sold-out + password-expired +
+  session-timeout + captcha scripts run end-to-end against the dev
+  extension (today the happy-path script exists, the others are
+  pending).
+- TB-1-17 PBS state pack + fixtures.
+- TB-1-18 recording mode (`.tbrec` dump + replay tool).
+- Phase 1 exit gate (all 18 tickets green, both AA + PBS fixture suites
+  in CI, audit chain integrity test, redactor + allowlist CI guards).
 
 ## Important Rules
 
