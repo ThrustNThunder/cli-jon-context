@@ -119,3 +119,34 @@ Verify it reads from `AccountStore.shared.current.token` (the `tc-h-` token from
 8. ✅ Relay URL NOT visible during onboarding
 
 Every single one must pass before Mack archives. No exceptions.
+
+---
+
+## Addendum — Michael's Review Findings (May 17 2026)
+
+### 6. Logo too small on splash screen
+**File: SplashView.swift**
+The logo renders too small. Bump the display size up one step — from 200×200 to 260×260 (or whatever the next logical size up is in the current implementation).
+
+### 7. AccountStore must clear on sign-out
+**File: AccountStore.swift (or wherever sign-out is handled)**
+When user signs out, `AccountStore.current` must be cleared completely. Old agent accounts, stale tokens, everything wiped. On next sign-in, a fresh account is set.
+
+Also: on fresh sign-in after the `OnboardingGate` auto-configure, verify `AccountStore.current` only contains the new account. No bleed from prior sessions.
+
+### 8. About section in Settings
+**File: SettingsView.swift**
+Add an "About" section at the bottom of Settings with:
+- App version + build number
+- Relay URL: `relay.thunderai.us` (read-only, copy button)
+- A single line: "ThunderCommo by Boost and Bolt LLC"
+
+### 9. My Connection Info — remove relay URL display
+**File: MyConnectionInfoView.swift**
+The relay URL should NOT be shown here. Remove it. Only show:
+- User's `tc-h-` token (masked, with show/hide toggle + copy button)
+- Section header: "Your Connection Token"
+- Footer: "Share this token with people who want to connect with you."
+
+The relay URL is `relay.thunderai.us` — it's hardcoded and not user-configurable. No need to show it.
+
