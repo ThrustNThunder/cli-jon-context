@@ -188,14 +188,22 @@ ALL 10 must pass. No archive until all 10 green.
 
 ## Addendum — Mack's Review Findings
 
-### Gap A — Explicit DeliveryCore connect after AccountStore seeding
+### Gap A — Full connection sequence after AccountStore seeding
 **File: SignUpView.swift**
 
-After seeding AccountStore, do NOT wait for next scene phase. Call immediately:
+After seeding AccountStore, fire ALL three in order:
 ```swift
+// 1. Connect to relay
 DeliveryCore.shared.handleScenePhase(.active)
+
+// 2. Upload APNs device token (this is what makes push notifications work)
+APNsManager.shared.retryTokenUploadIfNeeded()
+
+// 3. Bootstrap APNs registration if not already done
+APNsManager.shared.bootstrap()
 ```
-This triggers the relay connection right away.
+This is what made APNs work in Builds 51-53. Do not skip any of these three calls.
+Same sequence must be in the signin path (Gap B).
 
 ### Gap B — Sign-IN path needs same AccountStore seeding
 **File: SignInView.swift** (wherever signin success is handled)
