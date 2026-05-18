@@ -182,3 +182,54 @@ Search for any reference to Jon, "Jon", "jon-agent", the gateway token, or any h
 10. ✅ Sign out → full flush → back to signup
 
 ALL 10 must pass. No archive until all 10 green.
+
+
+---
+
+## Addendum — Mack's Review Findings
+
+### Gap A — Explicit DeliveryCore connect after AccountStore seeding
+**File: SignUpView.swift**
+
+After seeding AccountStore, do NOT wait for next scene phase. Call immediately:
+```swift
+DeliveryCore.shared.handleScenePhase(.active)
+```
+This triggers the relay connection right away.
+
+### Gap B — Sign-IN path needs same AccountStore seeding
+**File: SignInView.swift** (wherever signin success is handled)
+
+Same as signup — after successful signin, seed AccountStore with the relay Account:
+```swift
+AccountStore.shared.add(Account(
+    id: UUID().uuidString,
+    wsURL: "wss://relay.thunderai.us",
+    httpURL: "https://relay.thunderai.us",
+    token: tc_h_token,
+    name: displayName
+))
+DeliveryCore.shared.handleScenePhase(.active)
+```
+
+### Gap C — "You" card in roster
+**File: ContentView.swift or ThunderCommStore.swift**
+
+After signup/signin, add a self-entry to the local roster from UserStore.currentUser:
+```swift
+// Add self to roster so user sees themselves
+let selfEntry = RosterAgent(
+    id: "self",
+    name: UserStore.shared.currentUser?.displayName ?? "You",
+    emoji: "👤",
+    model: nil,
+    role: "human",
+    status: "online"
+)
+// Insert at top of roster
+```
+This is client-side only — relay doesn't send self-entries.
+
+### Gate additions (Mack adds to simulator checklist)
+11. ✅ Sign OUT then sign IN → AccountStore re-seeded → relay connects → roster works
+12. ✅ "You" (Michael) appears at top of roster after onboarding
